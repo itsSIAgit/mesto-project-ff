@@ -13,10 +13,4 @@ function deleteCard(evt) {
   evt.target.closest('.card').remove();
 };
 
-function parseCards(cards) {
-  cards.forEach(item => {
-    cardsPosition.append(makeCard(item, deleteCard));
-  });
-};
-
-parseCards(initialCards);
+initialCards.forEach(item => { cardsPosition.append(makeCard(item, deleteCard)); });
