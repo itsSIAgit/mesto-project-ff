@@ -1,3 +1,6 @@
+import './cards.js';
+import '../pages/index.css';
+
 const cardsPosition = document.querySelector('.places__list');
 const cardTemplate = document.querySelector('#card-template').content;
 
