@@ -1,4 +1,4 @@
-function showModal(evt) {
+function openModal(evt) {
   let whatApopupOpen = new DocumentFragment;
   if (evt.target.classList.contains('profile__edit-button')) {
     whatApopupOpen = document.querySelector('.popup_type_edit');
@@ -11,7 +11,8 @@ function showModal(evt) {
         whatApopupOpen.querySelector('.popup__image').src = evt.target.src;
         whatApopupOpen.querySelector('.popup__caption').textContent = evt.target.closest('.card').querySelector('.card__title').textContent;
   };
-  whatApopupOpen.classList.add('popup_is-opened');
+  whatApopupOpen.classList.add('popup_is-animated');
+  setTimeout(who => { who.classList.add('popup_is-opened'); }, 50, whatApopupOpen);
   whatApopupOpen.addEventListener('click', closeModal);
   document.addEventListener('keydown', closeModal);
 };
@@ -23,8 +24,9 @@ function closeModal(evt) {
     const openedPopup = document.querySelector('.popup_is-opened');
     openedPopup.removeEventListener('click', closeModal);
     openedPopup.classList.remove('popup_is-opened');
+    setTimeout(who => { who.classList.remove('popup_is-animated'); }, 600, openedPopup);
     document.removeEventListener('keydown', closeModal);
   };
 };
 
-export { showModal };
+export { openModal };
