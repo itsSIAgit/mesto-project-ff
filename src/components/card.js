@@ -1,9 +1,10 @@
-function makeCard(cardTemplate, cardData, delCardBtnF, likeCardBtnF) {
+function makeCard(cardTemplate, cardData, delCardBtnF, likeCardBtnF, expandCardImgF) {
   const cardToMake = cardTemplate.querySelector('.card').cloneNode('true');
   cardToMake.querySelector('.card__image').src = cardData.link;
   cardToMake.querySelector('.card__title').textContent = cardData.name;
-  cardToMake.querySelector('.card__delete-button').onclick = delCardBtnF;
-  cardToMake.querySelector('.card__like-button').onclick = likeCardBtnF;
+  cardToMake.querySelector('.card__delete-button').addEventListener('click', delCardBtnF);
+  cardToMake.querySelector('.card__like-button').addEventListener('click', likeCardBtnF);
+  cardToMake.querySelector('.card__image').addEventListener('click', expandCardImgF);
   return cardToMake;
 };
 
