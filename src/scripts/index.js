@@ -1,4 +1,4 @@
-import './cards.js';
+import { initialCards } from './cards.js';
 import '../pages/index.css';
 
 const cardsPosition = document.querySelector('.places__list');
@@ -8,7 +8,7 @@ function makeCard(cardData, delCard) {
   const cardToMake = cardTemplate.querySelector('.card').cloneNode('true');
   cardToMake.querySelector('.card__image').src = cardData.link;
   cardToMake.querySelector('.card__title').textContent = cardData.name;
-  cardToMake.querySelector('.card__delete-button').addEventListener('click', delCard);
+  cardToMake.querySelector('.card__delete-button').onclick = delCard;
   return cardToMake;
 };
 
