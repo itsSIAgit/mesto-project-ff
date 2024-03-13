@@ -1,13 +1,14 @@
 {
   "name": "mesto-project-ff",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Student project",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
-    "dev": "webpack serve"
+    "dev": "webpack serve",
+    "letsee": "webpack --mode production && webpack serve"
   },
-  "author": "",
+  "author": "Solovev Ilya",
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-env": "^7.24.0",
