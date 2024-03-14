@@ -46,26 +46,26 @@ initialCards.forEach(item => {
   cardsPosition.append(makeCard(cardTemplate, item, deleteCard, likeCard, openModal, modalImg, modalImgSrc, modalImgText));
 });
 
-document.querySelector('.profile__edit-button').addEventListener('click', evt => {
+document.querySelector('.profile__edit-button').addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
   openModal(modalEdit);
 });
-document.querySelector('.profile__add-button').addEventListener('click', evt => {
+document.querySelector('.profile__add-button').addEventListener('click', () => {
   openModal(modalNew);
 });
 
 modalEdit.addEventListener('click', closeModalByOverlay);
-modalEdit.querySelector('.popup__close').addEventListener('click', evt => {
+modalEdit.querySelector('.popup__close').addEventListener('click', () => {
   closeModal(modalEdit);
 });
 
 modalNew.addEventListener('click', closeModalByOverlay);
-modalNew.querySelector('.popup__close').addEventListener('click', evt => {
+modalNew.querySelector('.popup__close').addEventListener('click', () => {
   closeModal(modalNew);
 });
 
 modalImg.addEventListener('click', closeModalByOverlay);
-modalImg.querySelector('.popup__close').addEventListener('click', evt => {
+modalImg.querySelector('.popup__close').addEventListener('click', () => {
   closeModal(modalImg);
 });
