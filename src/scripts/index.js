@@ -9,8 +9,8 @@ const cardTemplate = document.querySelector('#card-template').content;
 const modalEdit = document.querySelector('.popup_type_edit');
 const modalNew = document.querySelector('.popup_type_new-card');
 const modalImg = document.querySelector('.popup_type_image');
-let modalImgSrc = document.querySelector('.popup__image');
-let modalImgText = document.querySelector('.popup__caption');
+const modalImgSrc = document.querySelector('.popup__image');
+const modalImgText = document.querySelector('.popup__caption');
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
