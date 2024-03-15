@@ -1,14 +1,11 @@
-function makeCard(cardTemplate, cardData, deleteCardMetod, likeCardMetod, expandCardImg, modalImg, modalImgSrc, modalImgText) {
+function makeCard(cardTemplate, cardData, deleteCardMetod, likeCardMetod, expandCardImg) {
   const cardToMake = cardTemplate.querySelector('.card').cloneNode('true');
   cardToMake.querySelector('.card__image').src = cardData.link;
+  cardToMake.querySelector('.card__image').alt = cardData.name;
   cardToMake.querySelector('.card__title').textContent = cardData.name;
   cardToMake.querySelector('.card__delete-button').addEventListener('click', deleteCardMetod);
   cardToMake.querySelector('.card__like-button').addEventListener('click', likeCardMetod);
-  cardToMake.querySelector('.card__image').addEventListener('click', evt => {
-    modalImgSrc.src = evt.target.src;
-    modalImgText.textContent = evt.target.closest('.card').querySelector('.card__title').textContent;
-    expandCardImg(modalImg);
-  });
+  cardToMake.querySelector('.card__image').addEventListener('click', expandCardImg);
   return cardToMake;
 };
 

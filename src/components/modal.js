@@ -10,16 +10,10 @@ function closeModal(modalBlock) {
   document.removeEventListener('keydown', closeModalByEscape);
 };
 
-function closeModalByOverlay(evt) {
-  if (evt.target === evt.currentTarget) {
-    closeModal(document.querySelector('.popup_is-opened'));
-  };
-};
-
 function closeModalByEscape(evt) {
   if (evt.key === 'Escape') {
     closeModal(document.querySelector('.popup_is-opened'));
   };
 };
 
-export { openModal, closeModal, closeModalByOverlay };
+export { openModal, closeModal };

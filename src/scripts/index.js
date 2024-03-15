@@ -1,15 +1,16 @@
 import { initialCards } from './cards.js';
 import { makeCard, deleteCard, likeCard } from '../components/card.js';
-import { openModal, closeModal, closeModalByOverlay } from '../components/modal.js';
+import { openModal, closeModal } from '../components/modal.js';
 import '../pages/index.css';
 
 const cardsPosition = document.querySelector('.places__list');
 const cardTemplate = document.querySelector('#card-template').content;
 
+const popups = document.querySelectorAll('.popup');
 const modalEdit = document.querySelector('.popup_type_edit');
 const modalNew = document.querySelector('.popup_type_new-card');
 const modalImg = document.querySelector('.popup_type_image');
-const modalImgSrc = document.querySelector('.popup__image');
+const modalImgData = document.querySelector('.popup__image');
 const modalImgText = document.querySelector('.popup__caption');
 
 const profileTitle = document.querySelector('.profile__title');
@@ -34,16 +35,23 @@ function handlePlaceFormSubmit(evt) {
   const cardItem = {};
   cardItem.name = placeNameInput.value;
   cardItem.link = placeLinkInput.value;
-  cardsPosition.prepend(makeCard(cardTemplate, cardItem, deleteCard, likeCard, openModal, modalImg, modalImgSrc, modalImgText));
+  cardsPosition.prepend(makeCard(cardTemplate, cardItem, deleteCard, likeCard, openLargeImage));
   newPlaceForm.reset();
   closeModal(modalNew);
+};
+
+function openLargeImage(evt) {
+  modalImgData.src = evt.target.src;
+  modalImgData.alt = evt.target.alt;
+  modalImgText.textContent = evt.target.closest('.card').querySelector('.card__title').textContent;
+  openModal(modalImg);
 };
 
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
 
 initialCards.forEach(item => {
-  cardsPosition.append(makeCard(cardTemplate, item, deleteCard, likeCard, openModal, modalImg, modalImgSrc, modalImgText));
+  cardsPosition.append(makeCard(cardTemplate, item, deleteCard, likeCard, openLargeImage));
 });
 
 document.querySelector('.profile__edit-button').addEventListener('click', () => {
@@ -55,17 +63,14 @@ document.querySelector('.profile__add-button').addEventListener('click', () => {
   openModal(modalNew);
 });
 
-modalEdit.addEventListener('click', closeModalByOverlay);
-modalEdit.querySelector('.popup__close').addEventListener('click', () => {
-  closeModal(modalEdit);
+popups.forEach(popup => {
+  popup.addEventListener('mousedown', evt => {
+    if (evt.target.classList.contains('popup_is-opened')) {
+      closeModal(popup);
+    };
+    if (evt.target.classList.contains('popup__close')) {
+      closeModal(popup);
+    };
+  });
 });
 
-modalNew.addEventListener('click', closeModalByOverlay);
-modalNew.querySelector('.popup__close').addEventListener('click', () => {
-  closeModal(modalNew);
-});
-
-modalImg.addEventListener('click', closeModalByOverlay);
-modalImg.querySelector('.popup__close').addEventListener('click', () => {
-  closeModal(modalImg);
-});
