@@ -1,12 +1,12 @@
-function makeCard(cardTemplate, cardData, deleteCardMetod, likeCardMetod, expandCardImg) {
+function makeCard({ cardTemplate, cardData, deleteCard, likeCard, openLargeImage }) {
   const cardToMake = cardTemplate.querySelector('.card').cloneNode('true');
   const cardImg = cardToMake.querySelector('.card__image'); 
   cardImg.src = cardData.link;
   cardImg.alt = cardData.name;
   cardToMake.querySelector('.card__title').textContent = cardData.name;
-  cardToMake.querySelector('.card__delete-button').addEventListener('click', deleteCardMetod);
-  cardToMake.querySelector('.card__like-button').addEventListener('click', likeCardMetod);
-  cardImg.addEventListener('click', expandCardImg);
+  cardToMake.querySelector('.card__delete-button').addEventListener('click', deleteCard);
+  cardToMake.querySelector('.card__like-button').addEventListener('click', likeCard);
+  cardImg.addEventListener('click', openLargeImage);
   return cardToMake;
 };
 

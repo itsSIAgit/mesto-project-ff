@@ -35,7 +35,7 @@ function handlePlaceFormSubmit(evt) {
   const cardItem = {};
   cardItem.name = placeNameInput.value;
   cardItem.link = placeLinkInput.value;
-  cardsPosition.prepend(makeCard(cardTemplate, cardItem, deleteCard, likeCard, openLargeImage));
+  cardsPosition.prepend(makeCard({ cardTemplate, cardData: cardItem, deleteCard, likeCard, openLargeImage }));
   newPlaceForm.reset();
   closeModal(modalNew);
 };
@@ -51,7 +51,7 @@ editProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
 
 initialCards.forEach(item => {
-  cardsPosition.append(makeCard(cardTemplate, item, deleteCard, likeCard, openLargeImage));
+  cardsPosition.append(makeCard({ cardTemplate, cardData: item, deleteCard, likeCard, openLargeImage }));
 });
 
 document.querySelector('.profile__edit-button').addEventListener('click', () => {
