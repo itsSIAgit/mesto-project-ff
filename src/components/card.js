@@ -1,3 +1,6 @@
+//Создать карточку
+//Входные параметры в виде объекта, что-бы не зависить от порядка
+//Возвращает одну готовую карточку для добавления
 function makeCard({ cardTemplate, cardData, deleteCard, likeCard, openLargeImage }) {
   const cardToMake = cardTemplate.querySelector('.card').cloneNode('true');
   const cardImg = cardToMake.querySelector('.card__image'); 
@@ -10,10 +13,12 @@ function makeCard({ cardTemplate, cardData, deleteCard, likeCard, openLargeImage
   return cardToMake;
 };
 
+//Удалить карточку из DOM
 function deleteCard(evt) {
   evt.target.closest('.card').remove();
 };
 
+//Изменить состояние сердечка (лайка) карточки
 function likeCard(evt) {
   evt.target.classList.toggle('card__like-button_is-active');
 };
