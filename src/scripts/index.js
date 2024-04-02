@@ -3,7 +3,7 @@
 import { makeCard, deleteCard, likeCard } from '../components/card.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { enableValidation, clearValidation } from '../components/validation.js';
-import { getProfileInfo, getInitialCards } from '../components/api.js';
+import { getProfileInfo, getInitialCards, updateProfileInfo } from '../components/api.js';
 import '../pages/index.css';
 
 //Место в DOM для карточек, шаблон карточки, пакет компонентов для создания
@@ -51,12 +51,20 @@ const validationConfig = {
 };
 
 //Ф. обработки события редактирования профиля
-//TODO переделать
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  profileTitle.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
-  closeModal(modalEdit);
+  profileFormButton.textContent = 'Сохранение...';
+  updateProfileInfo(nameInput.value, jobInput.value)
+    .then(res => {
+      profileTitle.textContent = res.name;
+      profileDescription.textContent = res.about;
+      profileFormButton.textContent = 'Сохранить';
+      closeModal(modalEdit);
+    })
+    .catch(err => {
+      profileFormButton.textContent = err;
+      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, profileFormButton)
+    });
 };
 
 //Ф. обработки события создания новой карточки
@@ -110,9 +118,11 @@ popups.forEach(popup => {
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
 
+//Первичная инициализация
 //Формирование и активация валидации форм
 enableValidation(validationConfig);
 
+//Загрузка профиля и карточек
 Promise.all([getProfileInfo(), getInitialCards()])
   .then(([userData, cardsData]) => {
     profileTitle.textContent = userData.name;
@@ -128,4 +138,4 @@ Promise.all([getProfileInfo(), getInitialCards()])
   });
 
 
-//TODO попап для ошибок
+//TODO попап для ошибок, убрать лишние console.log
