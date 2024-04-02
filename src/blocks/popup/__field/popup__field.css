@@ -1,0 +1,12 @@
+.popup__field {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  margin-bottom: 13px;
+  padding: 10px 0 0;
+  block-size: 44px;
+}
+
+.popup__field:last-of-type {
+  margin-bottom: 0;
+}

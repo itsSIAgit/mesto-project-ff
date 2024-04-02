@@ -1,6 +1,11 @@
 .popup__error {
-  display: none;
+  position: absolute;
+  z-index: 1;
+  top: calc(100% + 3px);
+  display: block;
+  min-block-size: 15px;
   font-size: 12px;
   line-height: 14.52px;
-  color: #ff0000;
+  color: #f00;
+  opacity: 0;
 }
