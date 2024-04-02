@@ -1,8 +1,9 @@
-//Импорты: массива карточек, модуля создания карточки, модуля
-//открытия и закрытия всплывающих окон, главный файл стилей 
+//Импорты: массива карточек, модуля создания карточки, модуля открытия 
+//и закрытия всплывающих окон, модуля валидации форм, главный файл стилей 
 import { initialCards } from './cards.js';
 import { makeCard, deleteCard, likeCard } from '../components/card.js';
 import { openModal, closeModal } from '../components/modal.js';
+import { enableValidation, clearValidation } from '../components/validation.js';
 import '../pages/index.css';
 
 //Место в DOM для карточек и шаблон карточки
@@ -29,7 +30,17 @@ const newPlaceForm = document.forms['new-place'];
 const placeNameInput = newPlaceForm.elements['place-name'];
 const placeLinkInput = newPlaceForm.elements['link'];
 
-//Ф. обработки формы редактирования профиля
+//Для работы валидаторов форм
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+
+//Ф. обработки события редактирования профиля
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
@@ -37,7 +48,7 @@ function handleProfileFormSubmit(evt) {
   closeModal(modalEdit);
 };
 
-//Ф. обработки формы создания новой карточки
+//Ф. обработки события создания новой карточки
 function handlePlaceFormSubmit(evt) {
   evt.preventDefault();
   const cardItem = {};
@@ -46,6 +57,7 @@ function handlePlaceFormSubmit(evt) {
   cardsPosition.prepend(makeCard({ cardTemplate, cardData: cardItem, deleteCard, likeCard, openLargeImage }));
   newPlaceForm.reset();
   closeModal(modalNew);
+  clearValidation(newPlaceForm, validationConfig);
 };
 
 //Ф. открытия всплывающего окна с большой картинкой
@@ -66,6 +78,7 @@ initialCards.forEach(item => {
 document.querySelector('.profile__edit-button').addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidation(editProfileForm, validationConfig);
   openModal(modalEdit);
 });
 document.querySelector('.profile__add-button').addEventListener('click', () => {
@@ -89,3 +102,6 @@ popups.forEach(popup => {
 //На нажатие кн. отправки форм
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
+
+//Формирование и активация валидации форм
+enableValidation(validationConfig);
