@@ -69,4 +69,32 @@ const submitCard = (name, link) => {
     });
 };
 
-export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard }
+//Записать лайк
+const sendLikeCard = (id) => {
+  return fetch(`${config.baseUrl}/cards/lik-es/${id}`, {
+    method: 'PUT',
+    headers: config.headers
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      };
+      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+    });
+};
+
+//Стереть лайк
+const sendUnlikeCard = (id) => {
+  return fetch(`${config.baseUrl}/cards/lik-es/${id}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      };
+      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+    });
+};
+
+export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard }

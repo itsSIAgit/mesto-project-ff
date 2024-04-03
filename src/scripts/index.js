@@ -3,7 +3,7 @@
 import { makeCard, deleteCard, likeCard } from '../components/card.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { enableValidation, clearValidation } from '../components/validation.js';
-import { getProfileInfo, getInitialCards, updateProfileInfo, submitCard } from '../components/api.js';
+import { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard } from '../components/api.js';
 import '../pages/index.css';
 
 //Место в DOM для карточек, шаблон карточки, пакет компонентов для создания
@@ -14,7 +14,9 @@ const cardParts = {
   deleteCard,
   likeCard,
   openLargeImage,
-  profileId: ''
+  profileId: '',
+  sendLikeCard,
+  sendUnlikeCard
 };
 
 //Для работы с всплывающими окнами
