@@ -134,7 +134,12 @@ Promise.all([getProfileInfo(), getInitialCards()])
     });
   })
   .catch(err => {
-    console.log(err);
+    const errPopup = document.querySelector('.popup_type_error');
+    errPopup.querySelector('.popup__title').textContent = err;
+    errPopup.querySelector('.popup__button').addEventListener('click', () => {
+      window.location.reload();
+    });
+    openModal(errPopup);
   });
 
 
