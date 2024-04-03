@@ -51,4 +51,22 @@ const getInitialCards = () => {
     });
 };
 
-export { getProfileInfo, getInitialCards, updateProfileInfo }
+//Добавить новую карточку
+const submitCard = (name, link) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify({
+      name: name,
+      link: link
+    }),
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      };
+      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+    });
+};
+
+export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard }

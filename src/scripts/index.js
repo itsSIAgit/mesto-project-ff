@@ -3,7 +3,7 @@
 import { makeCard, deleteCard, likeCard } from '../components/card.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { enableValidation, clearValidation } from '../components/validation.js';
-import { getProfileInfo, getInitialCards, updateProfileInfo } from '../components/api.js';
+import { getProfileInfo, getInitialCards, updateProfileInfo, submitCard } from '../components/api.js';
 import '../pages/index.css';
 
 //Место в DOM для карточек, шаблон карточки, пакет компонентов для создания
@@ -58,26 +58,31 @@ function handleProfileFormSubmit(evt) {
     .then(res => {
       profileTitle.textContent = res.name;
       profileDescription.textContent = res.about;
-      profileFormButton.textContent = 'Сохранить';
       closeModal(modalEdit);
+      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, profileFormButton);
     })
     .catch(err => {
       profileFormButton.textContent = err;
-      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, profileFormButton)
+      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, profileFormButton);
     });
 };
 
 //Ф. обработки события создания новой карточки
-//TODO переделать
 function handlePlaceFormSubmit(evt) {
   evt.preventDefault();
-  const cardItem = {};
-  cardItem.name = placeNameInput.value;
-  cardItem.link = placeLinkInput.value;
-  cardsPosition.prepend(makeCard({ cardTemplate, cardData: cardItem, deleteCard, likeCard, openLargeImage }));
-  newPlaceForm.reset();
-  closeModal(modalNew);
-  clearValidation(newPlaceForm, validationConfig);
+  newPlaceFormButton.textContent = 'Сохранение...';
+  submitCard(placeNameInput.value, placeLinkInput.value)
+    .then(res => {
+      cardsPosition.prepend(makeCard(res, cardParts));
+      closeModal(modalNew);
+      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, newPlaceFormButton);
+      newPlaceForm.reset();
+      clearValidation(newPlaceForm, validationConfig);
+    })
+    .catch(err => {
+      newPlaceFormButton.textContent = err;
+      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, newPlaceFormButton);
+    });
 };
 
 //Ф. открытия всплывающего окна с большой картинкой
@@ -143,4 +148,4 @@ Promise.all([getProfileInfo(), getInitialCards()])
   });
 
 
-//TODO попап для ошибок, убрать лишние console.log
+//TODO убрать лишние console.log

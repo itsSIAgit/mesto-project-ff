@@ -1,4 +1,4 @@
-//Включить валидацию
+//Включить валидацию всех форм
 function enableValidation(validationConfig) {
   Array.from(document.querySelectorAll(validationConfig.formSelector)).forEach(form => {
     setEventListeners(form, validationConfig);
