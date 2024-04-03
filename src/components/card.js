@@ -22,7 +22,7 @@ function makeCard(cardData, cardParts) {
   //Решить показывать и обрабатывать кн. удаления
   if (cardParts.profileId === cardData.owner['_id']) {
     cardToMake.querySelector('.card__delete-button').addEventListener('click', evt => {
-      cardParts.deleteCard(evt, cardToMake.id, cardParts.eraseCard, cardParts.agreePopup);
+      cardParts.deleteCard(evt, cardToMake.id, cardParts.sendEraseCard, cardParts.agreePopup);
     });
   } else {
     cardToMake.querySelector('.card__delete-button').classList.add('card__delete-button_disabled');
@@ -42,20 +42,20 @@ function makeCard(cardData, cardParts) {
 };
 
 //Удалить карточку из DOM и с сервера
-function deleteCard(evt, id, eraseCard, popup) {
+function deleteCard(evt, id, sendEraseCard, popup) {
   //Через onclick чтобы события не плодились 
   popup.button.onclick = () => {
     popup.button.textContent = 'Удаление...';
-    eraseCard(id)
-    .then(() => {
-      evt.target.closest('.card').remove();
-      popup.closeModal(popup.form);
-      setTimeout(btn => { btn.textContent = 'Да'; }, 1000, popup.button);
-    })
-    .catch(err => {
-      popup.button.textContent = err;
-      setTimeout(btn => { btn.textContent = 'Да'; }, 5000, popup.button);
-      });
+    sendEraseCard(id)
+      .then(() => {
+        evt.target.closest('.card').remove();
+        popup.closeModal(popup.form);
+        setTimeout(btn => { btn.textContent = 'Да'; }, 1000, popup.button);
+      })
+      .catch(err => {
+        popup.button.textContent = err;
+        setTimeout(btn => { btn.textContent = 'Да'; }, 5000, popup.button);
+        });
   };
   popup.openModal(popup.form);
 };

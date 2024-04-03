@@ -10,29 +10,13 @@ import {
   submitCard,
   sendLikeCard,
   sendUnlikeCard,
-  eraseCard
+  sendEraseCard
 } from '../components/api.js';
 import '../pages/index.css';
 
-//Место в DOM для карточек, шаблон карточки, пакет компонентов для создания
+//Место в DOM для карточек, шаблон карточки
 const cardsPosition = document.querySelector('.places__list');
 const cardTemplate = document.querySelector('#card-template').content;
-const cardParts = {
-  cardTemplate,
-  deleteCard,
-  likeCard,
-  openLargeImage,
-  profileId: '',
-  sendLikeCard,
-  sendUnlikeCard,
-  eraseCard,
-  agreePopup: {
-    form: document.querySelector('.popup_type_agree'),
-    button: document.querySelector('.popup_type_agree').querySelector('.popup__button'),
-    openModal,
-    closeModal
-  }
-};
 
 //Для работы с всплывающими окнами
 const popups = document.querySelectorAll('.popup');
@@ -41,6 +25,21 @@ const modalNew = document.querySelector('.popup_type_new-card');
 const modalImg = document.querySelector('.popup_type_image');
 const modalImgData = document.querySelector('.popup__image');
 const modalImgText = document.querySelector('.popup__caption');
+const modalAgree = document.querySelector('.popup_type_agree');
+
+/*
+const popups = {
+  all: document.querySelectorAll('.popup'),
+  editProfile: document.querySelector('.popup_type_edit'),
+  newPlace: document.querySelector('.popup_type_new-card'),
+  bigImg: {
+    window: document.querySelector('.popup_type_image'),
+    img: document.querySelector('.popup__image'),
+    caption: document.querySelector('.popup__caption')
+  },
+  agree: document.querySelector('.popup_type_agree')
+};
+*/
 
 //Для работы с полями профиля и его формой
 const profileTitle = document.querySelector('.profile__title');
@@ -56,6 +55,41 @@ const newPlaceForm = document.forms['new-place'];
 const placeNameInput = newPlaceForm.elements['place-name'];
 const placeLinkInput = newPlaceForm.elements['link'];
 const newPlaceFormButton = newPlaceForm.querySelector('.popup__button');
+
+/*
+const user = {
+  profile: {
+    title: document.querySelector('.profile__title'),
+    description: document.querySelector('.profile__description'),
+    image: document.querySelector('.profile__image')
+  },
+  popup: {
+    window: popups.editProfile,
+    form: document.forms['edit-profile'],
+    name: document.forms['edit-profile'].elements['name'],
+    job: document.forms['edit-profile'].elements['description'],
+    button: document.forms['edit-profile'].querySelector('.popup__button')
+  }
+};
+*/
+
+//Пакет компонентов для создания карточки
+const cardParts = {
+  cardTemplate,
+  deleteCard,
+  likeCard,
+  openLargeImage,
+  profileId: '',
+  sendLikeCard,
+  sendUnlikeCard,
+  sendEraseCard,
+  agreePopup: {
+    form: modalAgree,
+    button: modalAgree.querySelector('.popup__button'),
+    openModal,
+    closeModal
+  }
+};
 
 //Для работы валидаторов форм
 const validationConfig = {

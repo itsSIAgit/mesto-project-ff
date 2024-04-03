@@ -69,7 +69,7 @@ const submitCard = (name, link) => {
     });
 };
 
-const eraseCard = (id) => {
+const sendEraseCard = (id) => {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: 'DELETE',
     headers: config.headers
@@ -110,4 +110,4 @@ const sendUnlikeCard = (id) => {
     });
 };
 
-export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard, eraseCard }
+export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard, sendEraseCard }
