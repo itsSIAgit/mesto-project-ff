@@ -43,7 +43,8 @@ function makeCard(cardData, cardParts) {
 
 //Удалить карточку из DOM и с сервера
 function deleteCard(evt, id, eraseCard, popup) {
-  popup.button.addEventListener('click', () => {
+  //Через onclick чтобы события не плодились 
+  popup.button.onclick = () => {
     popup.button.textContent = 'Удаление...';
     eraseCard(id)
     .then(() => {
@@ -55,7 +56,7 @@ function deleteCard(evt, id, eraseCard, popup) {
       popup.button.textContent = err;
       setTimeout(btn => { btn.textContent = 'Да'; }, 5000, popup.button);
       });
-  })
+  };
   popup.openModal(popup.form);
 };
 

@@ -165,4 +165,4 @@ Promise.all([getProfileInfo(), getInitialCards()])
   });
 
 
-//TODO убрать лишние console.log
+//TODO убрать лишние console.log, настроить профиль
