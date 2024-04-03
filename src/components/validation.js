@@ -65,12 +65,12 @@ function hideInputError(form, inputElement, inputErrorClass, errorClass) {
 };
 
 //Очистить ошибки валидации
-function clearValidation(profileForm, validationConfig) {
-  const inputList = Array.from(profileForm.querySelectorAll(validationConfig.inputSelector));
-  const buttonElement = profileForm.querySelector(validationConfig.submitButtonSelector);
+function clearValidation(form, validationConfig) {
+  const inputList = Array.from(form.querySelectorAll(validationConfig.inputSelector));
+  const buttonElement = form.querySelector(validationConfig.submitButtonSelector);
   let errorElement;
   inputList.forEach((inputElement) => {
-    errorElement = profileForm.querySelector(`.popup__error_input-error_${inputElement.id}`);
+    errorElement = form.querySelector(`.popup__error_input-error_${inputElement.id}`);
     inputElement.classList.remove(validationConfig.inputErrorClass);
     errorElement.classList.remove(validationConfig.errorClass);
     errorElement.textContent = '';
