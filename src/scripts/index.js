@@ -1,9 +1,17 @@
-//Импорты: массива карточек, модуля создания карточки, модуля открытия 
-//и закрытия всплывающих окон, модуля валидации форм, главный файл стилей
+//Импорты модулей: создания карточки, открытия и закрытия
+//всплывающих окон, валидации форм, работы с API, главный файл стилей
 import { makeCard, deleteCard, likeCard } from '../components/card.js';
 import { openModal, closeModal } from '../components/modal.js';
 import { enableValidation, clearValidation } from '../components/validation.js';
-import { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard } from '../components/api.js';
+import {
+  getProfileInfo,
+  getInitialCards,
+  updateProfileInfo,
+  submitCard,
+  sendLikeCard,
+  sendUnlikeCard,
+  eraseCard
+} from '../components/api.js';
 import '../pages/index.css';
 
 //Место в DOM для карточек, шаблон карточки, пакет компонентов для создания
@@ -16,7 +24,14 @@ const cardParts = {
   openLargeImage,
   profileId: '',
   sendLikeCard,
-  sendUnlikeCard
+  sendUnlikeCard,
+  eraseCard,
+  agreePopup: {
+    form: document.querySelector('.popup_type_agree'),
+    button: document.querySelector('.popup_type_agree').querySelector('.popup__button'),
+    openModal,
+    closeModal
+  }
 };
 
 //Для работы с всплывающими окнами

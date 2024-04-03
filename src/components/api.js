@@ -69,23 +69,8 @@ const submitCard = (name, link) => {
     });
 };
 
-//Записать лайк
-const sendLikeCard = (id) => {
-  return fetch(`${config.baseUrl}/cards/lik-es/${id}`, {
-    method: 'PUT',
-    headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
-    });
-};
-
-//Стереть лайк
-const sendUnlikeCard = (id) => {
-  return fetch(`${config.baseUrl}/cards/lik-es/${id}`, {
+const eraseCard = (id) => {
+  return fetch(`${config.baseUrl}/cards/${id}`, {
     method: 'DELETE',
     headers: config.headers
   })
@@ -93,8 +78,36 @@ const sendUnlikeCard = (id) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+      return Promise.reject(`Ошибка удаления. Код: ${res.status}`); 
     });
 };
 
-export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard }
+//Записать лайк
+const sendLikeCard = (id) => {
+  return fetch(`${config.baseUrl}/cards/likes/${id}`, {
+    method: 'PUT',
+    headers: config.headers
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      };
+      return Promise.reject(`Ошибка записи лайка. Код: ${res.status}`); 
+    });
+};
+
+//Стереть лайк
+const sendUnlikeCard = (id) => {
+  return fetch(`${config.baseUrl}/cards/likes/${id}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      };
+      return Promise.reject(`Ошибка стирания лайка. Код: ${res.status}`); 
+    });
+};
+
+export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard, eraseCard }

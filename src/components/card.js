@@ -21,7 +21,9 @@ function makeCard(cardData, cardParts) {
   
   //Решить показывать и обрабатывать кн. удаления
   if (cardParts.profileId === cardData.owner['_id']) {
-    cardToMake.querySelector('.card__delete-button').addEventListener('click', cardParts.deleteCard);
+    cardToMake.querySelector('.card__delete-button').addEventListener('click', evt => {
+      cardParts.deleteCard(evt, cardToMake.id, cardParts.eraseCard, cardParts.agreePopup);
+    });
   } else {
     cardToMake.querySelector('.card__delete-button').classList.add('card__delete-button_disabled');
   };
@@ -39,10 +41,22 @@ function makeCard(cardData, cardParts) {
   return cardToMake;
 };
 
-//Удалить карточку из DOM и сервера
-//TODO переделать
-function deleteCard(evt) {
-  evt.target.closest('.card').remove();
+//Удалить карточку из DOM и с сервера
+function deleteCard(evt, id, eraseCard, popup) {
+  popup.button.addEventListener('click', () => {
+    popup.button.textContent = 'Удаление...';
+    eraseCard(id)
+    .then(() => {
+      evt.target.closest('.card').remove();
+      popup.closeModal(popup.form);
+      setTimeout(btn => { btn.textContent = 'Да'; }, 1000, popup.button);
+    })
+    .catch(err => {
+      popup.button.textContent = err;
+      setTimeout(btn => { btn.textContent = 'Да'; }, 5000, popup.button);
+      });
+  })
+  popup.openModal(popup.form);
 };
 
 //Изменить состояние сердечка (лайка) карточки
