@@ -28,6 +28,7 @@ const modalImg = document.querySelector('.popup_type_image');
 const modalImgData = document.querySelector('.popup__image');
 const modalImgText = document.querySelector('.popup__caption');
 const modalAgree = document.querySelector('.popup_type_agree');
+const modalAgreeButton = modalAgree.querySelector('.popup__button');
 const modalAvatar = document.querySelector('.popup_type_new-avatar');
 
 //Для работы с полями профиля и его формой
@@ -53,19 +54,12 @@ const avatarButton = avatarForm.querySelector('.popup__button');
 //Пакет компонентов для создания карточки
 const cardParts = {
   cardTemplate,
-  deleteCard,
+  profileId: '',
   likeCard,
   openLargeImage,
-  profileId: '',
   sendLikeCard,
   sendUnlikeCard,
-  sendEraseCard,
-  agreePopup: {
-    form: modalAgree,
-    button: modalAgree.querySelector('.popup__button'),
-    openModal,
-    closeModal
-  }
+  eraseCard
 };
 
 //Для работы валидаторов форм
@@ -79,14 +73,14 @@ const validationConfig = {
 };
 
 //Ф. временно помещающая ошибку в кнопку
-function putErrInBtn(err, button, message) {
+function putErrInBtn(err, button, buttonText, message) {
   //Если придет не кастомная ошибка - превратить её в кастом
   //Это происходит когда fetch не попадает в 1й .then
   if (typeof err !== 'string' || !err.startsWith('❌')) {
     err = '❌ ' + message;
   };
   button.textContent = err;
-  setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, button);
+  setTimeout(btn => { btn.textContent = buttonText; }, 5000, button);
 };
 
 //Ф. обработки события редактирования профиля
@@ -101,7 +95,7 @@ function handleProfileFormSubmit(evt) {
       setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, profileFormButton);
     })
     .catch(err => {
-      putErrInBtn(err, profileFormButton, 'Ошибка отправки');
+      putErrInBtn(err, profileFormButton, 'Сохранить', 'Ошибка отправки');
     });
 };
 
@@ -118,8 +112,26 @@ function handlePlaceFormSubmit(evt) {
       clearValidation(newPlaceForm, validationConfig);
     })
     .catch(err => {
-      putErrInBtn(err, newPlaceFormButton, 'Ошибка отправки');
+      putErrInBtn(err, newPlaceFormButton, 'Сохранить', 'Ошибка отправки');
     });
+};
+
+//Ф. удаления карточки с сервера и DOM
+function eraseCard(id) {
+  //Через onclick чтобы события не плодились 
+  modalAgreeButton.onclick = () => {
+    modalAgreeButton.textContent = 'Удаление...';
+    sendEraseCard(id)
+      .then(() => {
+        deleteCard(id);
+        closeModal(modalAgree);
+        setTimeout(btn => { btn.textContent = 'Да'; }, 1000, modalAgreeButton);
+      })
+      .catch(err => {
+        putErrInBtn(err, modalAgreeButton, 'Да', 'Ошибка удаления');
+      });
+  };
+  openModal(modalAgree);
 };
 
 //Ф. обработки события обновления аватара
@@ -141,7 +153,7 @@ function handleAvatarFormSubmit(evt) {
         });
     })
     .catch(err => {
-      putErrInBtn(err, avatarButton, 'Картинка недоступна или плохая');
+      putErrInBtn(err, avatarButton, 'Сохранить', 'Картинка недоступна или плохая');
     });
 };
 

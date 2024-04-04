@@ -19,10 +19,10 @@ function makeCard(cardData, cardParts) {
   cardToMake.querySelector('.card__title').textContent = cardData.name;
   carLikeCounter.textContent = cardData.likes.length;
   
-  //Решить показывать и обрабатывать кн. удаления
+  //Решить надо ли показывать и обрабатывать кн. удаления
   if (cardParts.profileId === cardData.owner['_id']) {
-    cardToMake.querySelector('.card__delete-button').addEventListener('click', evt => {
-      cardParts.deleteCard(evt, cardToMake.id, cardParts.sendEraseCard, cardParts.agreePopup);
+    cardToMake.querySelector('.card__delete-button').addEventListener('click', () => {
+      cardParts.eraseCard(cardToMake.id);
     });
   } else {
     cardToMake.querySelector('.card__delete-button').classList.add('card__delete-button_disabled');
@@ -41,27 +41,9 @@ function makeCard(cardData, cardParts) {
   return cardToMake;
 };
 
-//Удалить карточку из DOM и с сервера
-function deleteCard(evt, id, sendEraseCard, popup) {
-  //Через onclick чтобы события не плодились 
-  popup.button.onclick = () => {
-    popup.button.textContent = 'Удаление...';
-    sendEraseCard(id)
-      .then(() => {
-        evt.target.closest('.card').remove();
-        popup.closeModal(popup.form);
-        setTimeout(btn => { btn.textContent = 'Да'; }, 1000, popup.button);
-      })
-      .catch(err => {
-        //Если в err попало не кастомное сообщение
-        if (typeof err !== 'string' || !err.startsWith('❌')) {
-          err = '❌ Ошибка удаления';
-        };
-        popup.button.textContent = err;
-        setTimeout(btn => { btn.textContent = 'Да'; }, 5000, popup.button);
-        });
-  };
-  popup.openModal(popup.form);
+//Удалить карточку из DOM
+function deleteCard(id) {
+  document.getElementById(id).remove();
 };
 
 //Изменить состояние сердечка (лайка) карточки
