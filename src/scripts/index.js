@@ -55,10 +55,8 @@ const avatarButton = avatarForm.querySelector('.popup__button');
 const cardParts = {
   cardTemplate,
   profileId: '',
-  likeCard,
   openLargeImage,
-  sendLikeCard,
-  sendUnlikeCard,
+  checkLikeCard,
   eraseCard
 };
 
@@ -99,6 +97,29 @@ function handleProfileFormSubmit(evt) {
     });
 };
 
+//Ф. обработки события обновления аватара
+function handleAvatarFormSubmit(evt) {
+  evt.preventDefault();
+  avatarButton.textContent = 'Сохранение...';
+  checkNewAvatar(avatarInput.value)
+    .then(status => {
+      if (!status) {
+        return Promise.reject(`❌ По ссылке не картинка`);
+      };
+      submitNewAvatar(avatarInput.value)
+        .then(res => {
+          profileImage.style['background-image'] = `url(${res.avatar})`;
+          closeModal(modalAvatar);
+          setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, avatarButton);
+          avatarForm.reset();
+          clearValidation(avatarForm, validationConfig);
+        });
+    })
+    .catch(err => {
+      putErrInBtn(err, avatarButton, 'Сохранить', 'Картинка недоступна или плохая');
+    });
+};
+
 //Ф. обработки события создания новой карточки
 function handlePlaceFormSubmit(evt) {
   evt.preventDefault();
@@ -134,35 +155,40 @@ function eraseCard(id) {
   openModal(modalAgree);
 };
 
-//Ф. обработки события обновления аватара
-function handleAvatarFormSubmit(evt) {
-  evt.preventDefault();
-  avatarButton.textContent = 'Сохранение...';
-  checkNewAvatar(avatarInput.value)
-    .then(status => {
-      if (!status) {
-        return Promise.reject(`❌ По ссылке не картинка`);
-      };
-      submitNewAvatar(avatarInput.value)
-        .then(res => {
-          profileImage.style['background-image'] = `url(${res.avatar})`;
-          closeModal(modalAvatar);
-          setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, avatarButton);
-          avatarForm.reset();
-          clearValidation(avatarForm, validationConfig);
-        });
-    })
-    .catch(err => {
-      putErrInBtn(err, avatarButton, 'Сохранить', 'Картинка недоступна или плохая');
-    });
-};
-
 //Ф. открытия всплывающего окна с большой картинкой
 function openLargeImage(evt) {
   modalImgData.src = evt.target.src;
   modalImgData.alt = evt.target.alt;
   modalImgText.textContent = evt.target.closest('.card').querySelector('.card__title').textContent;
   openModal(modalImg);
+};
+
+//Ф. обработки лайка карточки
+function checkLikeCard(evt, id, counter, count) {
+  const heart = evt.target;
+  if (!heart.classList.contains('card__like-button_is-active')) {
+    sendLikeCard(id)
+      .then(res => {
+        count = res.likes.length;
+      })
+      .catch(() => {
+        count = 'ERROR';
+      })
+      .finally(() => {
+        likeCard(heart, counter, count);
+      });
+  } else {
+    sendUnlikeCard(id)
+      .then(res => {
+        count = res.likes.length;
+      })
+      .catch(() => {
+        count = 'ERROR';
+      })
+      .finally(() => {
+        likeCard(heart, counter, count);
+      });
+  };
 };
 
 //Добавление слушателей событий
@@ -228,4 +254,4 @@ Promise.all([getProfileInfo(), getInitialCards()])
   });
 
 
-//TODO убрать лишние console.log, деплой
+//TODO деплой

@@ -69,6 +69,7 @@ const submitCard = (name, link) => {
     });
 };
 
+//Стереть карточку
 const sendEraseCard = (id) => {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: 'DELETE',
