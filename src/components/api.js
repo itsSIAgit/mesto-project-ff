@@ -26,8 +26,8 @@ const updateProfileInfo = (name, about) => {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
-      name: name,
-      about: about
+      name,
+      about
     }),
   })
     .then(res => {
@@ -57,8 +57,8 @@ const submitCard = (name, link) => {
     method: 'POST',
     headers: config.headers,
     body: JSON.stringify({
-      name: name,
-      link: link
+      name,
+      link
     }),
   })
     .then(res => {
