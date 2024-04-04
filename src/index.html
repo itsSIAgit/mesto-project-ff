@@ -109,6 +109,25 @@
       <p class="popup__caption"></p>
     </div>
   </div>
+  <div class="popup popup_type_new-avatar">
+    <div class="popup__content popup__content_content_avatar">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="new-avatar">
+        <label class="popup__field">
+          <input
+            type="url"
+            name="ava-link"
+            class="popup__input popup__input_type_url"
+            id="avatar-url"
+            placeholder="Ссылка на новый аватар"
+            required>
+          <span class="popup__error popup__error_input-error_avatar-url"></span>
+        </label>
+        <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
+    </div>
+  </div>
   <div class="popup popup_type_error">
     <div class="popup__content popup__content_content_error">
       <button type="button" class="popup__close"></button>

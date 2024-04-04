@@ -10,7 +10,9 @@ import {
   submitCard,
   sendLikeCard,
   sendUnlikeCard,
-  sendEraseCard
+  sendEraseCard,
+  checkNewAvatar,
+  submitNewAvatar
 } from '../components/api.js';
 import '../pages/index.css';
 
@@ -26,6 +28,7 @@ const modalImg = document.querySelector('.popup_type_image');
 const modalImgData = document.querySelector('.popup__image');
 const modalImgText = document.querySelector('.popup__caption');
 const modalAgree = document.querySelector('.popup_type_agree');
+const modalAvatar = document.querySelector('.popup_type_new-avatar');
 
 //Для работы с полями профиля и его формой
 const profileTitle = document.querySelector('.profile__title');
@@ -41,6 +44,11 @@ const newPlaceForm = document.forms['new-place'];
 const placeNameInput = newPlaceForm.elements['place-name'];
 const placeLinkInput = newPlaceForm.elements['link'];
 const newPlaceFormButton = newPlaceForm.querySelector('.popup__button');
+
+//Для работы с формой обновления аватара
+const avatarForm = document.forms['new-avatar'];
+const avatarInput = avatarForm.elements['ava-link'];
+const avatarButton = avatarForm.querySelector('.popup__button');
 
 //Пакет компонентов для создания карточки
 const cardParts = {
@@ -105,6 +113,35 @@ function handlePlaceFormSubmit(evt) {
     });
 };
 
+function handleAvatarFormSubmit(evt) {
+  evt.preventDefault();
+  avatarButton.textContent = 'Сохранение...';
+  checkNewAvatar(avatarInput.value)
+    .then(status => {
+      if (status) {
+        submitNewAvatar(avatarInput.value)
+        .then(res => {
+          profileImage.style['background-image'] = `url(${res.avatar})`;
+          closeModal(modalAvatar);
+          setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, avatarButton);
+          avatarForm.reset();
+          clearValidation(avatarForm, validationConfig);
+        })
+        .catch(err => {
+          avatarButton.textContent = err;
+          setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, avatarButton);
+        });
+      } else {
+        avatarButton.textContent = 'В ссылке не картинка...';
+        setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, avatarButton);
+      }
+    })
+    .catch(() => {
+      avatarButton.textContent = 'Картинка недоступна или плохая';
+      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, avatarButton);
+    });
+};
+
 //Ф. открытия всплывающего окна с большой картинкой
 function openLargeImage(evt) {
   modalImgData.src = evt.target.src;
@@ -114,7 +151,7 @@ function openLargeImage(evt) {
 };
 
 //Добавление слушателей событий
-//На кнопки редактирования и добавления на гл. странице
+//На кнопки редактирований и добавления на гл. странице
 document.querySelector('.profile__edit-button').addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
@@ -123,6 +160,9 @@ document.querySelector('.profile__edit-button').addEventListener('click', () => 
 });
 document.querySelector('.profile__add-button').addEventListener('click', () => {
   openModal(modalNew);
+});
+document.querySelector('.profile__image').addEventListener('click', () => {
+  openModal(modalAvatar);
 });
 
 //На каждый попап с реакцией на оверлэй и крестик
@@ -142,6 +182,7 @@ popups.forEach(popup => {
 //На нажатие кн. отправки форм
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
+avatarForm.addEventListener('submit', handleAvatarFormSubmit);
 
 //Первичная инициализация
 //Формирование и активация валидации форм
@@ -152,10 +193,10 @@ Promise.all([getProfileInfo(), getInitialCards()])
   .then(([userData, cardsData]) => {
     profileTitle.textContent = userData.name;
     profileDescription.textContent = userData.about;
-    profileImage.style['background-image'] = `url(${userData.avatar})`
+    profileImage.style['background-image'] = `url(${userData.avatar})`;
     cardParts.profileId = userData['_id'];
     cardsData.forEach(item => {
-      cardsPosition.append(makeCard(item, cardParts))
+      cardsPosition.append(makeCard(item, cardParts));
     });
   })
   .catch(err => {
@@ -168,4 +209,4 @@ Promise.all([getProfileInfo(), getInitialCards()])
   });
 
 
-//TODO убрать лишние console.log, настроить профиль
+//TODO убрать лишние console.log, деплой

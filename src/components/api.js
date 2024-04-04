@@ -110,4 +110,38 @@ const sendUnlikeCard = (id) => {
     });
 };
 
-export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard, sendEraseCard }
+//Проверить что ссылка на новый аватар - это картинка
+const checkNewAvatar = (link) => {
+  return fetch(link, {
+    method: 'HEAD',
+  })
+    .then(res => {
+      if (res.ok) {
+        if (res.headers.get('Content-Type').includes('image')) {
+          return true;
+        } else {
+          return false;
+        };
+      };
+      return Promise.reject(`Картинка недоступна или плохая`);
+    });
+};
+
+//Обновить аватар
+const submitNewAvatar = (link) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: link
+    }),
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      };
+      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+    });
+};
+
+export { getProfileInfo, getInitialCards, updateProfileInfo, submitCard, sendLikeCard, sendUnlikeCard, sendEraseCard, checkNewAvatar, submitNewAvatar };
