@@ -53,6 +53,10 @@ function deleteCard(evt, id, sendEraseCard, popup) {
         setTimeout(btn => { btn.textContent = 'Да'; }, 1000, popup.button);
       })
       .catch(err => {
+        //Если в err попало не кастомное сообщение
+        if (typeof err !== 'string' || !err.startsWith('❌')) {
+          err = '❌ Ошибка удаления';
+        };
         popup.button.textContent = err;
         setTimeout(btn => { btn.textContent = 'Да'; }, 5000, popup.button);
         });
@@ -64,21 +68,21 @@ function deleteCard(evt, id, sendEraseCard, popup) {
 function likeCard(likeParts) {
   if (!likeParts.button.classList.contains('card__like-button_is-active')) {
     likeParts.sendLike(likeParts.id)
-    .then(res => {
-      likeParts.button.classList.add('card__like-button_is-active');
-      likeParts.counter.textContent = res.likes.length;
-    })
-    .catch(() => {
-      likeParts.counter.textContent = 'ERROR';
-    });
+      .then(res => {
+        likeParts.button.classList.add('card__like-button_is-active');
+        likeParts.counter.textContent = res.likes.length;
+      })
+      .catch(() => {
+        likeParts.counter.textContent = 'ERROR';
+      });
   } else {
     likeParts.sendUnlike(likeParts.id)
-    .then(res => {
-      likeParts.button.classList.remove('card__like-button_is-active');
-      likeParts.counter.textContent = res.likes.length;
-    })
-    .catch(() => {
-      likeParts.counter.textContent = 'ERROR';
+      .then(res => {
+        likeParts.button.classList.remove('card__like-button_is-active');
+        likeParts.counter.textContent = res.likes.length;
+      })
+      .catch(() => {
+        likeParts.counter.textContent = 'ERROR';
       });
   };
 };

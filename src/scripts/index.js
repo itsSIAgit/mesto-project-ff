@@ -78,6 +78,17 @@ const validationConfig = {
   errorClass: 'popup__error_visible'
 };
 
+//Ф. временно помещающая ошибку в кнопку
+function putErrInBtn(err, button, message) {
+  //Если придет не кастомная ошибка - превратить её в кастом
+  //Это происходит когда fetch не попадает в 1й .then
+  if (typeof err !== 'string' || !err.startsWith('❌')) {
+    err = '❌ ' + message;
+  };
+  button.textContent = err;
+  setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, button);
+};
+
 //Ф. обработки события редактирования профиля
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -90,8 +101,7 @@ function handleProfileFormSubmit(evt) {
       setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, profileFormButton);
     })
     .catch(err => {
-      profileFormButton.textContent = err;
-      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, profileFormButton);
+      putErrInBtn(err, profileFormButton, 'Ошибка отправки');
     });
 };
 
@@ -108,37 +118,30 @@ function handlePlaceFormSubmit(evt) {
       clearValidation(newPlaceForm, validationConfig);
     })
     .catch(err => {
-      newPlaceFormButton.textContent = err;
-      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, newPlaceFormButton);
+      putErrInBtn(err, newPlaceFormButton, 'Ошибка отправки');
     });
 };
 
+//Ф. обработки события обновления аватара
 function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   avatarButton.textContent = 'Сохранение...';
   checkNewAvatar(avatarInput.value)
     .then(status => {
-      if (status) {
-        submitNewAvatar(avatarInput.value)
+      if (!status) {
+        return Promise.reject(`❌ По ссылке не картинка`);
+      };
+      submitNewAvatar(avatarInput.value)
         .then(res => {
           profileImage.style['background-image'] = `url(${res.avatar})`;
           closeModal(modalAvatar);
           setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, avatarButton);
           avatarForm.reset();
           clearValidation(avatarForm, validationConfig);
-        })
-        .catch(err => {
-          avatarButton.textContent = err;
-          setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, avatarButton);
         });
-      } else {
-        avatarButton.textContent = 'В ссылке не картинка...';
-        setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, avatarButton);
-      }
     })
-    .catch(() => {
-      avatarButton.textContent = 'Картинка недоступна или плохая';
-      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 5000, avatarButton);
+    .catch(err => {
+      putErrInBtn(err, avatarButton, 'Картинка недоступна или плохая');
     });
 };
 
@@ -200,6 +203,10 @@ Promise.all([getProfileInfo(), getInitialCards()])
     });
   })
   .catch(err => {
+    //Если в err попало не кастомное сообщение
+    if (typeof err !== 'string' || !err.startsWith('❌')) {
+      err = 'Ошибка начальной загрузки';
+    };
     const errPopup = document.querySelector('.popup_type_error');
     errPopup.querySelector('.popup__title').textContent = err;
     errPopup.querySelector('.popup__button').addEventListener('click', () => {

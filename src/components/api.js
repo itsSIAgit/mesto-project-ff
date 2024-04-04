@@ -16,7 +16,7 @@ const getProfileInfo = () => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка получения профиля. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка получения профиля. Код: ${res.status}`); 
     });
 };
 
@@ -34,7 +34,7 @@ const updateProfileInfo = (name, about) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка отправки. Код: ${res.status}`); 
     });
 };
 
@@ -47,7 +47,7 @@ const getInitialCards = () => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка получения карточек. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка получения карточек. Код: ${res.status}`); 
     });
 };
 
@@ -65,7 +65,7 @@ const submitCard = (name, link) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка отправки. Код: ${res.status}`); 
     });
 };
 
@@ -78,7 +78,7 @@ const sendEraseCard = (id) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка удаления. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка удаления. Код: ${res.status}`); 
     });
 };
 
@@ -92,7 +92,7 @@ const sendLikeCard = (id) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка записи лайка. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка записи лайка. Код: ${res.status}`); 
     });
 };
 
@@ -106,7 +106,7 @@ const sendUnlikeCard = (id) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка стирания лайка. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка стирания лайка. Код: ${res.status}`); 
     });
 };
 
@@ -123,7 +123,7 @@ const checkNewAvatar = (link) => {
           return false;
         };
       };
-      return Promise.reject(`Картинка недоступна или плохая`);
+      return Promise.reject(`❌ Картинка недоступна. Код: ${res.status}`);
     });
 };
 
@@ -140,7 +140,7 @@ const submitNewAvatar = (link) => {
       if (res.ok) {
         return res.json();
       };
-      return Promise.reject(`Ошибка отправки. Код: ${res.status}`); 
+      return Promise.reject(`❌ Ошибка отправки. Код: ${res.status}`); 
     });
 };
 
