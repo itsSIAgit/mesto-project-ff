@@ -252,6 +252,3 @@ Promise.all([getProfileInfo(), getInitialCards()])
     });
     openModal(errPopup);
   });
-
-
-//TODO деплой
