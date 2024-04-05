@@ -20,11 +20,9 @@ function setEventListeners(form, validationConfig) {
 
 //Переключить доступность кн. отправки
 function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
-  if (hasInvalidInput(inputList)) {
-    buttonElement.classList.add(inactiveButtonClass);
-  } else {
-    buttonElement.classList.remove(inactiveButtonClass);
-  };
+  const config = hasInvalidInput(inputList);
+  config ? buttonElement.classList.add(inactiveButtonClass) : buttonElement.classList.remove(inactiveButtonClass);
+  buttonElement.disabled = config;
 };
 
 //Проверить что все поля ввода валидны
@@ -68,12 +66,8 @@ function hideInputError(form, inputElement, inputErrorClass, errorClass) {
 function clearValidation(form, validationConfig) {
   const inputList = Array.from(form.querySelectorAll(validationConfig.inputSelector));
   const buttonElement = form.querySelector(validationConfig.submitButtonSelector);
-  let errorElement;
   inputList.forEach((inputElement) => {
-    errorElement = form.querySelector(`.popup__error_input-error_${inputElement.id}`);
-    inputElement.classList.remove(validationConfig.inputErrorClass);
-    errorElement.classList.remove(validationConfig.errorClass);
-    errorElement.textContent = '';
+    hideInputError(form, inputElement, validationConfig.inputErrorClass, validationConfig.errorClass)
   });
   buttonElement.classList.add(validationConfig.inactiveButtonClass);
 };

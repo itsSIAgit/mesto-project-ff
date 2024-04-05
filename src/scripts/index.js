@@ -28,8 +28,9 @@ const modalImg = document.querySelector('.popup_type_image');
 const modalImgData = document.querySelector('.popup__image');
 const modalImgText = document.querySelector('.popup__caption');
 const modalAgree = document.querySelector('.popup_type_agree');
-const modalAgreeButton = modalAgree.querySelector('.popup__button');
 const modalAvatar = document.querySelector('.popup_type_new-avatar');
+const modalAgreeButton = modalAgree.querySelector('.popup__button');
+let cardIdToDelete;
 
 //Для работы с полями профиля и его формой
 const profileTitle = document.querySelector('.profile__title');
@@ -78,7 +79,7 @@ function putErrInBtn(err, button, buttonText, message) {
     err = '❌ ' + message;
   };
   button.textContent = err;
-  setTimeout(btn => { btn.textContent = buttonText; }, 5000, button);
+  setTimeout(() => { button.textContent = buttonText; }, 5000);
 };
 
 //Ф. обработки события редактирования профиля
@@ -90,7 +91,7 @@ function handleProfileFormSubmit(evt) {
       profileTitle.textContent = res.name;
       profileDescription.textContent = res.about;
       closeModal(modalEdit);
-      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, profileFormButton);
+      setTimeout(() => { profileFormButton.textContent = 'Сохранить'; }, 1000);
     })
     .catch(err => {
       putErrInBtn(err, profileFormButton, 'Сохранить', 'Ошибка отправки');
@@ -110,7 +111,7 @@ function handleAvatarFormSubmit(evt) {
         .then(res => {
           profileImage.style['background-image'] = `url(${res.avatar})`;
           closeModal(modalAvatar);
-          setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, avatarButton);
+          setTimeout(() => { avatarButton.textContent = 'Сохранить'; }, 1000);
           avatarForm.reset();
           clearValidation(avatarForm, validationConfig);
         });
@@ -128,7 +129,7 @@ function handlePlaceFormSubmit(evt) {
     .then(res => {
       cardsPosition.prepend(makeCard(res, cardParts));
       closeModal(modalNew);
-      setTimeout(btn => { btn.textContent = 'Сохранить'; }, 1000, newPlaceFormButton);
+      setTimeout(() => { newPlaceFormButton.textContent = 'Сохранить'; }, 1000);
       newPlaceForm.reset();
       clearValidation(newPlaceForm, validationConfig);
     })
@@ -139,19 +140,7 @@ function handlePlaceFormSubmit(evt) {
 
 //Ф. удаления карточки с сервера и DOM
 function eraseCard(id) {
-  //Через onclick чтобы события не плодились 
-  modalAgreeButton.onclick = () => {
-    modalAgreeButton.textContent = 'Удаление...';
-    sendEraseCard(id)
-      .then(() => {
-        deleteCard(id);
-        closeModal(modalAgree);
-        setTimeout(btn => { btn.textContent = 'Да'; }, 1000, modalAgreeButton);
-      })
-      .catch(err => {
-        putErrInBtn(err, modalAgreeButton, 'Да', 'Ошибка удаления');
-      });
-  };
+  cardIdToDelete = id;
   openModal(modalAgree);
 };
 
@@ -166,30 +155,19 @@ function openLargeImage(evt) {
 //Ф. обработки лайка карточки
 function checkLikeCard(evt, id, counter, count) {
   const heart = evt.target;
-  if (!heart.classList.contains('card__like-button_is-active')) {
-    sendLikeCard(id)
-      .then(res => {
-        count = res.likes.length;
-      })
-      .catch(() => {
-        count = 'ERROR';
-      })
-      .finally(() => {
-        likeCard(heart, counter, count);
-      });
-  } else {
-    sendUnlikeCard(id)
-      .then(res => {
-        count = res.likes.length;
-      })
-      .catch(() => {
-        count = 'ERROR';
-      })
-      .finally(() => {
-        likeCard(heart, counter, count);
-      });
-  };
+  const likeMethod = heart.classList.contains('card__like-button_is-active') ? sendUnlikeCard : sendLikeCard;
+  likeMethod(id) 
+    .then(res => { 
+      count = res.likes.length;
+    }) 
+    .catch(() => { 
+      count = 'ERROR'; 
+    }) 
+    .finally(() => { 
+      likeCard(heart, counter, count);
+    });
 };
+
 
 //Добавление слушателей событий
 //На кнопки редактирований и добавления на гл. странице
@@ -208,13 +186,11 @@ document.querySelector('.profile__image').addEventListener('click', () => {
 
 //На каждый попап с реакцией на оверлэй и крестик
 //mousedown - что-бы не было бага, когда клавиша была зажата
-//внутри, а отпущена на оверлее - происходит ненужное закрытие 
+//внутри, а отпущена на оверлее - происходит ненужное закрытие
 popups.forEach(popup => {
   popup.addEventListener('mousedown', evt => {
-    if (evt.target.classList.contains('popup_is-opened')) {
-      closeModal(popup);
-    };
-    if (evt.target.classList.contains('popup__close')) {
+    if (evt.target.classList.contains('popup_is-opened')
+        || evt.target.classList.contains('popup__close')) {
       closeModal(popup);
     };
   });
@@ -224,6 +200,20 @@ popups.forEach(popup => {
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
 avatarForm.addEventListener('submit', handleAvatarFormSubmit);
+
+//На кн. -да-, в окне подтверждения удаления карточки
+modalAgreeButton.addEventListener('click', () => {
+  modalAgreeButton.textContent = 'Удаление...';
+  sendEraseCard(cardIdToDelete)
+    .then(() => {
+      deleteCard(cardIdToDelete);
+      closeModal(modalAgree);
+      setTimeout(() => { modalAgreeButton.textContent = 'Да'; }, 1000);
+    })
+    .catch(err => {
+      putErrInBtn(err, modalAgreeButton, 'Да', 'Ошибка удаления');
+    });
+});
 
 //Первичная инициализация
 //Формирование и активация валидации форм

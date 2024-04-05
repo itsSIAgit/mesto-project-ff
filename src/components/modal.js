@@ -3,7 +3,7 @@
 //не проглатывал пост-добавление класса и стабильно работала анимация появления
 function openModal(modalBlock) {
   modalBlock.classList.add('popup_is-animated');
-  setTimeout(who => { who.classList.add('popup_is-opened'); }, 50, modalBlock);
+  setTimeout(() => { modalBlock.classList.add('popup_is-opened'); }, 50);
   document.addEventListener('keydown', closeModalByEscape);
 };
 
@@ -11,7 +11,7 @@ function openModal(modalBlock) {
 //Время задержки равно времени анимации затухания из стилей
 function closeModal(modalBlock) {
   modalBlock.classList.remove('popup_is-opened');
-  setTimeout(who => { who.classList.remove('popup_is-animated'); }, 600, modalBlock);
+  setTimeout(() => { modalBlock.classList.remove('popup_is-animated'); }, 600);
   document.removeEventListener('keydown', closeModalByEscape);
 };
 

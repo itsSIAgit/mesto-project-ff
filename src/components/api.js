@@ -7,18 +7,21 @@ const config = {
   }
 };
 
+//Обработать ответ
+function handleResponse(res, errorMessage) {
+  if (res.ok) {
+    return res.json();
+  };
+  return Promise.reject(errorMessage);
+};
+
 //Получить данные профиля пользователя
 const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка получения профиля. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка получения профиля. Код: ${res.status}`));
 };
+
 
 //Обновить данные профиля пользователя
 const updateProfileInfo = (name, about) => {
@@ -29,26 +32,14 @@ const updateProfileInfo = (name, about) => {
       name,
       about
     }),
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка отправки. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка отправки. Код: ${res.status}`));
 };
 
 //Получить список карточек
 const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка получения карточек. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка получения карточек. Код: ${res.status}`));
 };
 
 //Добавить новую карточку
@@ -60,13 +51,7 @@ const submitCard = (name, link) => {
       name,
       link
     }),
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка отправки. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка отправки. Код: ${res.status}`));
 };
 
 //Стереть карточку
@@ -74,13 +59,7 @@ const sendEraseCard = (id) => {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: 'DELETE',
     headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка удаления. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка удаления. Код: ${res.status}`));
 };
 
 //Записать лайк
@@ -88,13 +67,7 @@ const sendLikeCard = (id) => {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: 'PUT',
     headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка записи лайка. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка записи лайка. Код: ${res.status}`));
 };
 
 //Стереть лайк
@@ -102,13 +75,18 @@ const sendUnlikeCard = (id) => {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: 'DELETE',
     headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка стирания лайка. Код: ${res.status}`); 
-    });
+  }).then(res => handleResponse(res, `❌ Ошибка стирания лайка. Код: ${res.status}`));
+};
+
+//Обновить аватар
+const submitNewAvatar = (link) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: link
+    })
+  }).then(res => handleResponse(res, `❌ Ошибка отправки. Код: ${res.status}`));
 };
 
 //Проверить что ссылка на новый аватар - это картинка
@@ -125,23 +103,6 @@ const checkNewAvatar = (link) => {
         };
       };
       return Promise.reject(`❌ Картинка недоступна. Код: ${res.status}`);
-    });
-};
-
-//Обновить аватар
-const submitNewAvatar = (link) => {
-  return fetch(`${config.baseUrl}/users/me/avatar`, {
-    method: 'PATCH',
-    headers: config.headers,
-    body: JSON.stringify({
-      avatar: link
-    }),
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      };
-      return Promise.reject(`❌ Ошибка отправки. Код: ${res.status}`); 
     });
 };
 
