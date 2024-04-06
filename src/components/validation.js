@@ -20,18 +20,13 @@ function setEventListeners(form, validationConfig) {
 
 //Переключить доступность кн. отправки
 function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
-  if (hasInvalidInput(inputList)) {
-    disableSubmitButton(buttonElement, inactiveButtonClass);
-  } else {
-    buttonElement.classList.remove(inactiveButtonClass);
-    buttonElement.disabled = false;
-  };
+  disableSubmitButton(buttonElement, inactiveButtonClass, hasInvalidInput(inputList));
 };
 
 //Выключить кнопку отправки
-function disableSubmitButton(button, inactiveButtonClass) {
-  button.classList.add(inactiveButtonClass);
-  button.disabled = true;
+function disableSubmitButton(button, inactiveButtonClass, config) {
+  button.classList.toggle(inactiveButtonClass, config);
+  button.disabled = config;
 };
 
 //Проверить что все поля ввода валидны
@@ -78,7 +73,7 @@ function clearValidation(form, validationConfig) {
   inputList.forEach((inputElement) => {
     hideInputError(form, inputElement, validationConfig.inputErrorClass, validationConfig.errorClass)
   });
-  disableSubmitButton(buttonElement, validationConfig.inactiveButtonClass);
+  disableSubmitButton(buttonElement, validationConfig.inactiveButtonClass, true);
 };
 
 export { enableValidation, clearValidation };
