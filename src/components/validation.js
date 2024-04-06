@@ -20,9 +20,18 @@ function setEventListeners(form, validationConfig) {
 
 //Переключить доступность кн. отправки
 function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
-  const config = hasInvalidInput(inputList);
-  config ? buttonElement.classList.add(inactiveButtonClass) : buttonElement.classList.remove(inactiveButtonClass);
-  buttonElement.disabled = config;
+  if (hasInvalidInput(inputList)) {
+    disableSubmitButton(buttonElement, inactiveButtonClass);
+  } else {
+    buttonElement.classList.remove(inactiveButtonClass);
+    buttonElement.disabled = false;
+  };
+};
+
+//Выключить кнопку отправки
+function disableSubmitButton(button, inactiveButtonClass) {
+  button.classList.add(inactiveButtonClass);
+  button.disabled = true;
 };
 
 //Проверить что все поля ввода валидны
@@ -69,7 +78,7 @@ function clearValidation(form, validationConfig) {
   inputList.forEach((inputElement) => {
     hideInputError(form, inputElement, validationConfig.inputErrorClass, validationConfig.errorClass)
   });
-  buttonElement.classList.add(validationConfig.inactiveButtonClass);
+  disableSubmitButton(buttonElement, validationConfig.inactiveButtonClass);
 };
 
 export { enableValidation, clearValidation };
